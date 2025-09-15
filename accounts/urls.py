@@ -2,6 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # Ví dụ route test
-    path("test/", views.test_view, name="test"),
+    path("signup/", views.signUpView, name="signup"),
+    path("login/", views.loginView, name="login"),
 ]
