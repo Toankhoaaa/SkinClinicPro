@@ -11,10 +11,8 @@ class UserSignupSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ('username', 'email', 'phone', 'password', 'password_confirm', 'role', 'first_name', 'last_name')
+        fields = ('username', 'password', 'password_confirm', 'role', 'first_name', 'last_name')
         extra_kwargs = {
-            'email': {'required': True},
-            'phone': {'required': True},
             'role': {'required': True},
         }
     
@@ -25,19 +23,11 @@ class UserSignupSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(e.messages)
         return value
     
-    def validate_phone(self, value):
-        if User.objects.filter(phone=value).exists():
-            raise serializers.ValidationError("Số điện thoại này đã được sử dụng.")
-        return value
-    
-    def validate_email(self, value):
-        if User.objects.filter(email=value).exists():
-            raise serializers.ValidationError("Email này đã được sử dụng.")
-        return value
-    
     def validate(self, attrs):
         if attrs['password'] != attrs['password_confirm']:
             raise serializers.ValidationError("Mật khẩu xác nhận không khớp.")
+        elif User.objects.filter(username=attrs['username']).exists():
+            raise serializers.ValidationError("Tên đăng nhập đã tồn tại.")
         return attrs
     
     def create(self, validated_data):
