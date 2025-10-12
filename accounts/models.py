@@ -10,6 +10,9 @@ class User(AbstractUser):
         ("admin", "Admin"),
     ])
     recovery_token = models.CharField(max_length=255, null=True, blank=True)
+    cccd = models.CharField(max_length=20, blank=True, null=True)  # Citizen ID
+    ethinic_group = models.CharField(max_length=50, blank=True, null=True)
+    
     def __str__(self):
         return f"{self.username} ({self.role})"
 
