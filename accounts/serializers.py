@@ -62,3 +62,15 @@ class UserLoginSerializer(serializers.Serializer):
                 raise serializers.ValidationError("Tên đăng nhập hoặc mật khẩu không đúng.")
         else:
             raise serializers.ValidationError("Vui lòng nhập tên đăng nhập và mật khẩu.")
+
+
+class ResetTokenSerializer(serializers.Serializer):
+    token = serializers.CharField()
+    new_password = serializers.CharField(write_only=True)
+
+    def validate_token(self, value):
+        try:
+            user = User.objects.get(reset_token=value)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("Token không hợp lệ.")
+        return value
