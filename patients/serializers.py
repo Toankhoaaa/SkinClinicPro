@@ -28,7 +28,7 @@ class PatientSerializer(serializers.ModelSerializer):
             'ethinic_group',
             'occupation',
         ]
-        read_only_fields = ['id']   
+        read_only_fields = ['id', 'user']
 
     def update(self, instance, validated_data):
         """

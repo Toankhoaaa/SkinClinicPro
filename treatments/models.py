@@ -8,5 +8,5 @@ class Treatment(models.Model):
     purpose = models.CharField(max_length=255)
     drug = models.ForeignKey(Drug, on_delete=models.SET_NULL, null=True, blank=True)
     dosage = models.CharField(max_length=50, null=True, blank=True)
-    repeat_days = models.CharField(max_length=50, null=True, blank=True)  # có thể tách bảng riêng
+    repeat_days = models.CharField(max_length=50, null=True, blank=True)
     repeat_time = models.TimeField(null=True, blank=True)
