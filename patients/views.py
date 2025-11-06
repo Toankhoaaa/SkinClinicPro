@@ -2,10 +2,6 @@ from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from django.contrib.auth import get_user_model
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import Patient
 from .serializers import PatientSerializer
@@ -19,10 +15,8 @@ def myProfileView(request):
     Returns patient data including user information
     """
     try:
-        # Get the patient profile for the authenticated user
         patient = Patient.objects.get(user=request.user)
-        
-        # Serialize the patient data
+
         serializer = PatientSerializer(patient)
         
         return Response({
