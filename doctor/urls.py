@@ -1,14 +1,17 @@
-from django.urls import path
-from . import views
+# doctor/urls.py
 
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import DoctorViewSet
+
+# 1. Tạo một router
+router = DefaultRouter()
+
+# 2. Đăng ký DoctorViewSet với router
+# 'doctors' là tiền tố URL (ví dụ: /api/doctors/)
+router.register(r'doctors', DoctorViewSet, basename='doctor')
+
+# 3. Thêm các URL của router vào urlpatterns
 urlpatterns = [
-    path("my_profile/", views.myProfileView, name="my_profile"),
-    # path("update_profile/", views.updateProfileView, name="profile"),
-    # path("delete_profile/", views.deleteProfileView, name="delete_profile"),
-]
-
-urlpatterns += [
-    # path("my_schedule/", views.myScheduleView, name="my_schedule"),
-    # path("update_schedule/", views.updateScheduleView, name="schedule"),
-    # path("delete_schedule/", views.deleteScheduleView, name="delete_schedule"),
+    path('', include(router.urls)),
 ]
