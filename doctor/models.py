@@ -26,14 +26,3 @@ class Doctor(models.Model):
     is_available = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     description = models.TextField(null=True, blank=True)
-
-class Schedule (models.Model):
-    doctor = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True)
-    date = models.DateField()
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    is_available = models.BooleanField(default=True)
-    max_patients = models.IntegerField(default=10, null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.doctor} - {self.date} ({self.start_time}-{self.end_time})"

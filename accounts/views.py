@@ -9,7 +9,7 @@ from django.contrib.auth import get_user_model
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
-from .serializers import UserSignupSerializer, UserLoginSerializer, ResetTokenSerializer, RoleSerializer
+from .serializers import UserRegisterSerializer, UserLoginSerializer, PasswordResetSerializer, RoleSerializer
 
 User = get_user_model()
 
@@ -20,7 +20,7 @@ def signUpView(request):
     """
     API endpoint for user registration
     """
-    serializer = UserSignupSerializer(data=request.data)
+    serializer = UserRegisterSerializer(data=request.data)
 
     if serializer.is_valid():
         user = serializer.save()

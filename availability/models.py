@@ -1,28 +1,19 @@
+# availability/models.py
 from django.db import models
 from doctor.models import Doctor
 
-
-class Availability (models.Model):
-    SLOT_STATUS = [
-        ("AVAILABLE", "Available"),
-        ("BOOKED", "Booked"),
-        ("UNAVAILABLE", "Unavailable"),
-    ]
-    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+class Schedule(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name="schedules")
     date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
-    status = models.CharField(
-        max_length=20,
-        choices=SLOT_STATUS,
-        default="AVAILABLE"
-    )
-    
+    is_available = models.BooleanField(default=True)
+    max_patients = models.IntegerField(default=10, null=True, blank=True)
+
     class Meta:
-        indexes = [
-            models.Index(fields=["doctor", "start_time"]),
-        ]
-        ordering = ["start_time"]
+        # Đảm bảo một bác sĩ không thể tạo 2 lịch trùng ngày
+        unique_together = ('doctor', 'date') 
+        ordering = ['date', 'start_time']
 
     def __str__(self):
-        return f"{self.doctor.user.first_name + self.doctor.user.last_name} - {self.start_time.strftime('%Y-%m-%d %H:%M')} ({self.status})"
+        return f"{self.doctor.user.username} - {self.date} ({self.start_time}-{self.end_time})"
