@@ -1,0 +1,60 @@
+[
+{
+  "model": "accounts.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$hFQM3B9JGKG73c2kr9RsIs$2EhHWfkKM0F+Kidj07yckR9xuEyPK5rWW8/BrzJwPik=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "hungtran",
+    "first_name": "Hung",
+    "last_name": "Tran",
+    "email": "hungtran@patient.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-11-13T06:37:25.809Z",
+    "birthday": null,
+    "gender": "",
+    "address": null,
+    "phone": null,
+    "avatar": "",
+    "role": 3,
+    "recovery_token": null,
+    "cccd": null,
+    "ethinic_group": null,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.role",
+  "pk": 1,
+  "fields": {
+    "name": "Admin"
+  }
+},
+{
+  "model": "accounts.role",
+  "pk": 2,
+  "fields": {
+    "name": "Doctor"
+  }
+},
+{
+  "model": "accounts.role",
+  "pk": 3,
+  "fields": {
+    "name": "Patient"
+  }
+},
+{
+  "model": "patients.patient",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "health_insurance_number": null,
+    "occupation": null,
+    "medical_history": null
+  }
+}
+]
