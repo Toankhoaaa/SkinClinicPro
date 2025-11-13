@@ -10,8 +10,6 @@ __pycache__/
 # File cơ sở dữ liệu (nếu dùng local)
 *.sqlite3
 db.sqlite3
-
-# File biến môi trường
 .env
 
 # Các file hệ thống

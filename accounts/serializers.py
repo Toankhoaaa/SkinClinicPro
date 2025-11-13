@@ -21,12 +21,6 @@ class RoleSerializer(serializers.ModelSerializer):
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
-    """
-    (Sửa lại) - Đây là phiên bản kết hợp:
-    1. Validation (validate_password, validate) từ code của BẠN.
-    2. Logic 'create' (tự động tạo profile) từ code của TÔI.
-    3. Thêm trường 'email' và 'phone' (rất quan trọng).
-    """
     password = serializers.CharField(
         write_only=True, 
         required=True, 
@@ -38,36 +32,32 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'username', 'email', 'phone',  # <<< Thêm 'email' và 'phone'
+            'username', 'email', 'phone',
             'password', 'password_confirm', 
             'role', 'first_name', 'last_name'
         )
         extra_kwargs = {
             'password': {'write_only': True},
-            'email': {'required': True}, # Email là bắt buộc
+            'username': {'required': True},
         }
 
     def validate(self, attrs):
-        # 1. Kiểm tra mật khẩu
         if attrs['password'] != attrs['password_confirm']:
             raise serializers.ValidationError({"password_confirm": "Mật khẩu xác nhận không khớp."})
         
-        # 2. Kiểm tra Username
         if User.objects.filter(username=attrs['username']).exists():
             raise serializers.ValidationError({"username": "Tên đăng nhập đã tồn tại."})
         
-        # 3. Kiểm tra Email
         if User.objects.filter(email=attrs['email']).exists():
             raise serializers.ValidationError({"email": "Email đã tồn tại."})
             
         return attrs
 
-    @transaction.atomic # Đảm bảo tạo User + Profile cùng lúc
+    @transaction.atomic
     def create(self, validated_data):
         """
         Ghi đè hàm create để tự động tạo Patient/Doctor profile
         """
-        # 1. Lấy và xóa các data không thuộc User model
         role_obj = validated_data.pop('role')
         validated_data.pop('password_confirm')
         password = validated_data.pop('password')
@@ -102,8 +92,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 class UserLoginSerializer(serializers.Serializer):
     """
-    (Không thay đổi) - Serializer này rất tốt.
-    Việc cho phép login bằng cả username và email rất tiện.
+    Cho phép login bằng cả username và email rất tiện.
     """
     username = serializers.CharField(label="Tên đăng nhập hoặc Email")
     password = serializers.CharField(write_only=True)
@@ -138,10 +127,6 @@ class UserLoginSerializer(serializers.Serializer):
 
 
 class PasswordResetSerializer(serializers.Serializer):
-    """
-    (Sửa lại) - Sửa tên serializer và tên trường cho đúng với model
-    và thêm hàm 'save' để thực thi.
-    """
     token = serializers.CharField(label="Recovery Token")
     new_password = serializers.CharField(
         write_only=True, 
