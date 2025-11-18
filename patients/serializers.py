@@ -4,11 +4,15 @@ from accounts.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """Serializer cho user, cho phép cập nhật một số trường cơ bản"""
+    """Serializer cho user, bao gồm cả các thông tin cá nhân"""
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name', 'phone', 'avatar', 'role', 'date_joined', 'is_active']
-        read_only_fields = ['username', 'role', 'date_joined', 'is_active']  # chỉ cho phép sửa email, name, phone, avatar
+        fields = [
+            'username', 'email', 'first_name', 'last_name', 
+            'phone', 'avatar', 'role', 'date_joined', 'is_active',
+            'birthday', 'gender', 'address', 'cccd', 'ethinic_group'
+        ]
+        read_only_fields = ['username', 'role', 'date_joined', 'is_active']
 
 
 class PatientSerializer(serializers.ModelSerializer):
@@ -20,15 +24,11 @@ class PatientSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'user',
-            'birthday',
-            'gender',
-            'address',
-            'cccd',
             'health_insurance_number',
-            'ethinic_group',
             'occupation',
+            'medical_history',
         ]
-        read_only_fields = ['id', 'user']
+        read_only_fields = ['id']
 
     def update(self, instance, validated_data):
         """
@@ -36,7 +36,6 @@ class PatientSerializer(serializers.ModelSerializer):
         """
         user_data = validated_data.pop('user', None)
 
-        # Cập nhật thông tin Patient
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
