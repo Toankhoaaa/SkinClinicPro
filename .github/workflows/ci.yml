@@ -11,23 +11,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Lint
+          # Cài thêm flake8 nếu chưa có trong requirements.txt
+          pip install flake8 pytest-cov
+
+      - name: Lint with flake8
         run: |
-          # flake8 .
+          # Dừng build nếu có lỗi cú pháp Python (E9, F63, F7, F82)
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # Kiểm tra chuẩn PEP8 (độ dài dòng code, độ phức tạp), cảnh báo nhưng không dừng build (--exit-zero)
+          # Bạn có thể bỏ --exit-zero nếu muốn bắt buộc code phải đẹp mới được merge
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
       - name: Run tests
         env:
           DJANGO_SETTINGS_MODULE: bookingcare.settings
           DB_ENGINE: django.db.backends.sqlite3
           DEBUG: "False"
-          SECRET_KEY: ci-secret
+          SECRET_KEY: ci-secret-key-for-testing
           CORS_ALLOW_ALL_ORIGINS: "True"
         run: |
-          pytest -q
-
+          # Chạy pytest với report coverage đơn giản trên terminal
+          pytest --cov=. --cov-report=term-missing
