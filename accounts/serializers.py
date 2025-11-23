@@ -25,6 +25,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         write_only=True, 
         required=True, 
         validators=[validate_password]
+        validators=[validate_password]
     )
     password_confirm = serializers.CharField(write_only=True, required=True)
     role = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all())
