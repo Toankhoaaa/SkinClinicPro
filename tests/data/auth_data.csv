@@ -1,0 +1,15 @@
+username,email,password,role_id,expected_status,desc
+benjamingarcia,ericdoyle@example.com,Strong@Pass123!,3,201,Valid User
+brett43,george05@example.net,Strong@Pass123!,3,201,Valid User
+melissaward,gardnerlaurie@example.net,Strong@Pass123!,3,201,Valid User
+jamiemckay,xwood@example.com,Strong@Pass123!,3,201,Valid User
+gespinoza,amanda39@example.net,Strong@Pass123!,3,201,Valid User
+tlopez,wayne06@example.org,Strong@Pass123!,3,201,Valid User
+schwartzchristopher,sanchezshelby@example.org,Strong@Pass123!,3,201,Valid User
+nathan90,reginalowery@example.net,Strong@Pass123!,3,201,Valid User
+ashleyedwards,darlene19@example.net,Strong@Pass123!,3,201,Valid User
+brandonpham,nicholascardenas@example.org,Strong@Pass123!,3,201,Valid User
+bad_role_user,bad_role@test.com,Strong@Pass123!,99,400,Invalid Role ID
+weak_pass_user,weak@test.com,123,3,400,Weak Password
+bad_email_user,not-an-email,Strong@Pass123!,3,400,Invalid Email Format
+duplicate_user,dup@test.com,Strong@Pass123!,3,400,Duplicate Username

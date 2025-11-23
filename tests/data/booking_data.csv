@@ -1,0 +1,4 @@
+doctor_username,date_offset,time,expected_status,desc
+dr_auto_1,1,09:00,201,Booking Hop Le
+dr_auto_1,1,20:00,400,Dat ngoai gio
+dr_auto_1,-1,09:00,400,Dat ngay qua khu
