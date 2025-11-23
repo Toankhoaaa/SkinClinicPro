@@ -18,10 +18,28 @@ class ScheduleSerializer(serializers.ModelSerializer):
         read_only_fields = ('doctor',) 
 
     def validate(self, data):
-        if data['date'] < datetime.date.today():
-            raise serializers.ValidationError("Không thể tạo lịch cho ngày trong quá khứ.")
+        """
+        Validate dữ liệu, hỗ trợ cả Create (đủ field) và Update (thiếu field).
+        """
+        # 1. Lấy date: Ưu tiên từ data gửi lên, nếu không có thì lấy từ bản ghi cũ (instance)
+        date_val = data.get('date')
+        if not date_val and self.instance:
+            date_val = self.instance.date
+
+        # Chỉ validate nếu có giá trị date (tránh lỗi khi cả data và instance đều ko có - dù hiếm)
+        if date_val and date_val < datetime.date.today():
+            raise serializers.ValidationError("Không thể tạo/sửa lịch cho ngày trong quá khứ.")
             
-        if data['start_time'] >= data['end_time']:
+        # 2. Lấy start_time và end_time tương tự
+        start = data.get('start_time')
+        end = data.get('end_time')
+        
+        if self.instance:
+            start = start or self.instance.start_time
+            end = end or self.instance.end_time
+
+        # 3. Validate logic giờ
+        if start and end and start >= end:
             raise serializers.ValidationError("Giờ kết thúc phải sau giờ bắt đầu.")
             
         return data

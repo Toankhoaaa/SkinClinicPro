@@ -6,7 +6,7 @@ class User(AbstractUser):
     gender = models.CharField(max_length=10, choices=[("male","Male"),("female","Female")])
     address = models.CharField(max_length=255, blank=True, null=True)
     phone = models.CharField(max_length=15, unique=True, null=True, blank=True)
-    avatar = models.ImageField(upload_to="avatars/", null=True, blank=True)
+    avatar = models.TextField(null=True, blank=True)
     role = models.ForeignKey("Role", on_delete=models.SET_NULL, null=True, blank=True)
     recovery_token = models.CharField(max_length=255, null=True, blank=True)
     cccd = models.CharField(max_length=20, blank=True, null=True)

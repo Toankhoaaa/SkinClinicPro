@@ -24,7 +24,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True, 
         required=True, 
-        validators=[validate_password] # Áp dụng validator chuẩn của Django
+        validators=[validate_password]
+        validators=[validate_password]
     )
     password_confirm = serializers.CharField(write_only=True, required=True)
     role = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all())
@@ -32,7 +33,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'username', 'email', 'phone',
+            'username', 'email', 'phone', 'gender', 'avatar',
             'password', 'password_confirm', 
             'role', 'first_name', 'last_name'
         )

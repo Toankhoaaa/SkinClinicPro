@@ -114,7 +114,7 @@ else:
             'USER': env("DB_USER", default="postgres"),
             'PASSWORD': env("DB_PASSWORD", default="2004969749497"),
             'HOST': env("DB_HOST", default="localhost"),
-            'PORT': env("DB_PORT", default="5433"),
+            'PORT': env("DB_PORT", default="5432"),
         }
     }
 

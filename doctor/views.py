@@ -4,7 +4,7 @@ from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.decorators import action  # Import 'action'
+from rest_framework.decorators import action
 
 from .models import Doctor
 from .serializers import DoctorSerializer
@@ -13,23 +13,30 @@ class DoctorViewSet(viewsets.ModelViewSet):
     """
     ViewSet để quản lý Bác sĩ.
     - Cung cấp các hành động CRUD (List, Retrieve, Update, ...).
+    - Hỗ trợ lọc theo chuyên khoa (?specialty=...)
     - Cung cấp hành động tùy chỉnh 'my-profile' để bác sĩ tự xem hồ sơ.
     """
     
     # 1. CẤU HÌNH CHUNG
     serializer_class = DoctorSerializer
-    
-    # Lấy tất cả bác sĩ đã được xác minh và có sẵn
-    queryset = Doctor.objects.filter(
-        is_available=True, 
-        verificationStatus="VERIFIED"
-    )
-    
-    # Áp dụng cho TẤT CẢ các hành động trong ViewSet này
     authentication_classes = [JWTAuthentication]
     
-    # 2. QUYỀN HẠN (Permissions) - Tùy chỉnh theo hành động
+    # Thay thế thuộc tính queryset = ... bằng hàm get_queryset để xử lý logic lọc
+    def get_queryset(self):
+        # 1. Lọc cơ bản
+        queryset = Doctor.objects.filter(
+            is_available=True, 
+            verificationStatus="VERIFIED"
+        )
+        
+        # 2. Hỗ trợ lọc theo chuyên khoa (?specialty=ID)
+        specialty_id = self.request.query_params.get('specialty')
+        if specialty_id:
+            queryset = queryset.filter(specialty_id=specialty_id)
+            
+        return queryset
     
+    # 2. QUYỀN HẠN (Permissions)
     def get_permissions(self):
         """
         Gán quyền (permissions) khác nhau cho các hành động khác nhau.
@@ -43,14 +50,11 @@ class DoctorViewSet(viewsets.ModelViewSet):
             self.permission_classes = [IsAuthenticated]
         else:
             # Chỉ Admin mới được phép tạo, sửa, xóa bác sĩ
-            # (create, update, partial_update, destroy)
             self.permission_classes = [IsAdminUser]
             
         return super().get_permissions()
 
     # 3. HÀNH ĐỘNG TÙY CHỈNH (Custom Action)
-    # Đây chính là logic từ 'myProfileView' của bạn
-
     @action(detail=False, methods=['get'], url_path='my-profile')
     def my_profile(self, request):
         """
@@ -62,7 +66,6 @@ class DoctorViewSet(viewsets.ModelViewSet):
             doctor = Doctor.objects.get(user=self.request.user)
 
             # 'self.get_serializer' thay cho 'DoctorSerializer'
-            # để ViewSet có thể truyền context (ví dụ: request)
             serializer = self.get_serializer(doctor)
 
             return Response({
@@ -82,5 +85,5 @@ class DoctorViewSet(viewsets.ModelViewSet):
             return Response({
                 'success': False,
                 'message': 'An error occurred while retrieving doctor profile',
-                'error': str(e) # Thêm chi tiết lỗi
+                'error': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

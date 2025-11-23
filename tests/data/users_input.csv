@@ -1,0 +1,11 @@
+username,email,password,role_id,expected_status
+stephaniesmith,kwilliams@example.com,password123,3,201
+carolinewalker,natashaowens@example.net,password123,3,201
+xjarvis,gary19@example.com,password123,3,201
+gardnertim,bwilliams@example.org,password123,3,201
+droberts,morgan62@example.net,password123,3,201
+gdowns,awashington@example.net,password123,3,201
+ucooper,kingkeith@example.org,password123,3,201
+kevinstokes,gibsonjanet@example.com,password123,3,201
+alexamiller,matthewrodriguez@example.net,password123,3,201
+thomasandrew,melaniesmith@example.org,password123,3,201
